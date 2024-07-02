@@ -1,6 +1,8 @@
 import { conn } from "../db.js";
 
 const getArtistas = async (_, res) => {
+    
+    const [result, fields] = await conn.query("SELECT * FROM artista ");
     // Completar con la consulta que devuelve todos los artistas
     // Recordar que los parámetros de una consulta GET se encuentran en req.params
     // Deberían devolver los datos de la siguiente forma:

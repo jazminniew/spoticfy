@@ -5,7 +5,7 @@ const getAlbumes = async (_, res) => {
     // Recordar que los parámetros de una consulta GET se encuentran en req.params
     // Deberían devolver los datos de la siguiente forma:
     /*
-        [
+        [   GET nombreartista as nombre 
             {
                 "id": 1,
                 "nombre": "Nombre del album",
@@ -37,7 +37,13 @@ const getAlbum = async (req, res) => {
             "nombre_artista": "Nombre del artista"
         }
     */
+    const id = req.params.id;
 
+    const [rows, fields] = await conn.query(
+        "SELECT id, nombre, artista FROM albumes WHERE id = ?", [id]
+    );
+
+    res.send(rows[0]);
 };
 
 const createAlbum = async (req, res) => {
@@ -50,6 +56,10 @@ const createAlbum = async (req, res) => {
             "artista": "Id del artista"
         }
     */
+   const {nombre, artista} = req.body;
+   const [rows, fields] = await conn.query(
+       "INSERT INTO albumes (nombre, artista) VALUES (?, ?);", [nombre, artista]
+   )
 };
 
 const updateAlbum = async (req, res) => {
@@ -62,6 +72,19 @@ const updateAlbum = async (req, res) => {
             "artista": "Id del artista"
         }
     */
+   const { nombre, artista } = req.body;
+   const id = req.params.id;
+   const [result, _] = await conn.query(
+    `
+    UPDATE
+        albumes
+    SET
+        nombre = ?
+        artista = ?
+    WHERE
+        id = ?
+    `, [nombre, artista, id]
+   )
 };
 
 const deleteAlbum = async (req, res) => {
